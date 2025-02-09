@@ -11,10 +11,6 @@ matplotlib.use('Agg')
 
 app = Flask(__name__)
 
-
-
-
-
 @app.route("/", methods = ['GET','POST'])
 def index():
 
