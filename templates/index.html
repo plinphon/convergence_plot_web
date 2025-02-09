@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convergence Plot</title>
+</head>
+<body>
+
+    <h1>Convergence Graph Plot</h1>
+    
+    <label for="fun">Function:</label>
+    <input type="text" id="fun" name="fun" placeholder="e.g., x**2 - 4"><br><br>
+
+    <label for="df">Derivativ of Function:</label>
+    <input type="text" id="df" name="df" placeholder="e.g., 2x"><br><br>
+
+    <label for="a">Interval a:</label>
+    <input type="text" id="a" name="a" placeholder="e.g., 2"><br><br>
+
+    <label for="b">Interval b:</label>
+    <input type="text" id="b" name="b"><br><br>
+
+    <button type="button" onclick="submitForm()">submit</button>
+
+    <h2>Root: <span id="result">Waiting for input...</span></h2>
+
+    <h2>Convergence Plot</h2>
+    <img id="plot" src="data:image/png;base64,{{ graph }}" alt="Convergence Plot">
+
+    <script>
+        function submitForm() {
+            let fun = document.getElementById("fun").value;
+            let df = document.getElementById("df").value;
+            let a = document.getElementById("a").value;
+            let b = document.getElementById("b").value;
+
+            fetch("/", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ fun: fun, df: df, a: a, b: b })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    document.getElementById("result").textContent =  data.result;
+                } else {
+                    document.getElementById("result").textContent = "Root not found.";
+                }
+
+                if (data.graph) {
+                    document.getElementById("plot").src = "data:image/png;base64," + data.graph;
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
+
+</body>
+</html>
+ 
